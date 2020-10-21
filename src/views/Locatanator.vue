@@ -101,7 +101,11 @@
     margin: 1rem;
     cursor: pointer;
   }
-  a.ints{
+  a.instructions:hover{
+    text-decoration: underline;
+    font-weight: bold;
+  }
+  a.instructions{
     cursor: pointer;
   }
 
