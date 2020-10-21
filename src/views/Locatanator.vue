@@ -1,5 +1,45 @@
 <template>
-    
+    <div class="container">
+      <h1>Lokatonator</h1>
+      <p>Selle lihtsa programmi abil saad sa kokku lõigata .vob laiendiga video faile.<br />
+      Juhiste nägemiseks vajuta <a @click="showInstructions = !showInstructions" class="instructions">siia</a></p>
+      <transition name="slide">
+        <ol v-show="showInstructions">
+          <li v-for="(tip,key) in set" :key='key'>{{tip}}</li>
+        </ol>
+      </transition>
+      <div class="dropbox" :class="{error: isError}">
+        <input type="file" multiple
+          @change="handleFile($event.target.files); fileCount = $event.target.files.length"
+          class="input-file">
+          <p v-if="isInitial">
+            Lohista video failid sellesse kasti<br> või otsi need üles klikates siia
+          </p>
+          <p v-if="isReady">
+            {{ fileCount }} faili sisestatud
+          </p>
+          <p class="error_text" v-if="isError">
+            {{ errorMessage }}
+          </p>
+          <p v-if="isDone">
+            Fail on töötlemisel/allalaadimisel. <br> Kui tahad, võid juba järgmise video välja valida.
+          </p>
+      </div>
+      <div class="bottom">
+        <label for="newfname"> Uue faili nimi:
+        <input id="newfname" type="text" v-model="newName" class="input-text">
+        </label>
+
+        <a class="readyButton"
+          v-if="isReady"
+          @click="setDone()"
+          :href="fileUrl"
+          :download="fullName">Salvest asukohta</a>
+        <a class="readyButton"
+          v-if="isDone"
+          @click="reset()">Nulli andmed</a>
+      </div>
+    </div>
 </template>
 <script lang="ts" src="../Utl/Locatanator.js"></script>
 

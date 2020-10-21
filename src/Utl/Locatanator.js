@@ -22,7 +22,6 @@ export default {
       'Kui tahad uut videofaili kokku kleepida, siis alusta uuesti algusest.'
     ])
 
-
     const isInitial = computed(function () {
       return currentStatus.value == STATUS_INITIAL
     })
@@ -36,51 +35,50 @@ export default {
       return currentStatus.value == STATUS_DONE
     })
     const fullName = computed(function () {
-      return newName.value + '.' + fileExtension.value;
+      return newName.value + '.' + fileExtension.value
     })
 
     function handleFile (fileList) {
-        softReset();
+      softReset()
 
-        if (!fileList.length) return
-        if (fileList.length <= 1) 
-          return setError("Sisesta vähemalt kaks faili")
-        // check if all files are with same extension and
-        // has allowed
-        let firstFileSize = fileList[0].size
-        let count = 0;
-        fileList.forEach(file => {
-            count += 1
-            // setError('Fu')
-            let fn = file.name.split('.')
-            let ext = fn[fn.length - 1].toLowerCase();
+      if (!fileList.length) return
+      if (fileList.length <= 1) { return setError('Sisesta vähemalt kaks faili') }
+      // check if all files are with same extension and
+      // has allowed
+      const firstFileSize = fileList[0].size
+      let count = 0
+      fileList.forEach(file => {
+        count += 1
+        // setError('Fu')
+        const fn = file.name.split('.')
+        const ext = fn[fn.length - 1].toLowerCase()
 
-            if (fileExtension.value == '') {
-              if (allowedExtensions.value.includes(ext)) {
-                fileExtension.value = ext
-              } else {
-                // let message = 
-                setError('Faililaiendiks võib olla ainult ' + extToString())
-              }
-            }
-            if (!isError.value && fileExtension.value != ext) {
-              setError("Veendu, et kõik failid oleksid ." + fileExtension.value + " faililaiendiga")
-            }
-            if (!isError.value && file.size > firstFileSize && count < 3) {
-              setError("Vali uuesti. Seekord ära esimest VOB faili (VIDEO_TS.VOB) lisa")
-            }
-        });
-      
+        if (fileExtension.value == '') {
+          if (allowedExtensions.value.includes(ext)) {
+            fileExtension.value = ext
+          } else {
+            // let message =
+            setError('Faililaiendiks võib olla ainult ' + extToString())
+          }
+        }
+        if (!isError.value && fileExtension.value != ext) {
+          setError('Veendu, et kõik failid oleksid .' + fileExtension.value + ' faililaiendiga')
+        }
+        if (!isError.value && file.size > firstFileSize && count < 3) {
+          setError('Vali uuesti. Seekord ära esimest VOB faili (VIDEO_TS.VOB) lisa')
+        }
+      })
+
       if (isError.value) return
-      
-      let blob = new Blob(fileList, {type: "octet/stream"})
-      
+
+      const blob = new Blob(fileList, { type: 'octet/stream' })
+
       // let dv = new DataView(blob, 0, 10)
       // console.log(dv)
       fileUrl.value = URL.createObjectURL(blob)
-      
+
       currentStatus.value = STATUS_READY
-      
+
       // fileUrl.value = URL.createObjectURL(FileList[0]);
     }
     function reset () {
@@ -90,22 +88,22 @@ export default {
       errorMessage.value = ''
       newName.value = 'Uus video'
     }
-    function setError(message) {
+    function setError (message) {
       currentStatus.value = STATUS_ERROR
       errorMessage.value = message
     }
-    function softReset() {
+    function softReset () {
       currentStatus.value = STATUS_INITIAL
       fileExtension.value = ''
       errorMessage.value = ''
     }
-    function setDone() {
+    function setDone () {
       currentStatus.value = STATUS_DONE
     }
-    function extToString() {
+    function extToString () {
       let str = ''
       for (let i = 0; i < allowedExtensions.value.length; i++) {
-        const ext = allowedExtensions.value[i];
+        const ext = allowedExtensions.value[i]
         str += '.' + ext
         if (i != allowedExtensions.value.length - 1) {
           str += ', '
